@@ -1,16 +1,12 @@
 version: '2'
 
 services:
-    graphql:
-        image: golang:1.8
-        volumes:
-            - "./graphql:/graphql"
-        command: /graphql/start.sh
     api:
-        image: golang:1.8
+        build: ./api
         volumes:
-            - "./api:/api"
-        command: /api/start.sh
+            - ./api:/var/www/html
+        ports:
+            - 80
     ms1:
         image: golang:1.8
         volumes:
