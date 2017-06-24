@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+    graphql:
+        image: golang:1.8
+        volumes:
+            - "./graphql:/graphql"
+        command: /graphql/start.sh
+    api:
+        image: golang:1.8
+        volumes:
+            - "./api:/api"
+        command: /api/start.sh
+    ms1:
+        image: golang:1.8
+        volumes:
+            - "./ms1:/ms1"
+        command: /ms1/start.sh
+    ms2:
+        image: golang:1.8
+        volumes:
+            - "./ms2:/ms2"
+        command: /ms2/start.sh
+    ms3:
+        image: golang:1.8
+        volumes:
+            - "./ms3:/ms3"
+        command: /ms3/start.sh
+
+
+
+
+
+
+
+
