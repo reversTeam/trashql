@@ -9,10 +9,26 @@ services:
             - "0.0.0.0:80:80"
         entrypoint: php /var/www/html/bin/console server:run 0.0.0.0:80
     ms1:
-        image: golang:1.8
+        build: ./ms1
+        restart: always
         volumes:
-            - "./ms1:/ms1"
-        command: /ms1/start.sh
+            - ./ms1/resolvers:/var/www/html
+        ports:
+            - 0.0.0.0:80:80
+            - 0.0.0.0:9000:9000
+        entrypoint: php /var/www/html/bin/console server:run 0.0.0.0:80
+    ms1_db:
+        image: sameersbn/postgresql:9.6-2
+        restart: always
+        ports:
+            - "5432:5432"
+        environment:
+            - DEBUG=false
+            - DB_USER=online
+            - DB_PASS=online_ms1
+            - DB_NAME=ms1
+        volumes:
+            - ./ms1/database:/var/lib/postgresql
     ms2:
         image: golang:1.8
         volumes:
