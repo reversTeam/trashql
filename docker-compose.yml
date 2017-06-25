@@ -4,9 +4,10 @@ services:
     api:
         build: ./api
         volumes:
-            - ./api:/var/www/html
+            - ./api/gateway:/var/www/html
         ports:
-            - 80
+            - "0.0.0.0:80:80"
+        entrypoint: php /var/www/html/bin/console server:run 0.0.0.0:80
     ms1:
         build: ./ms1
         restart: always

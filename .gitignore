@@ -1,3 +1,5 @@
 /.idea/
 /api/gateway/vendor/
 /ms1/database/9.6/
+.idea
+var/cache/*
