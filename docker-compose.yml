@@ -10,14 +10,16 @@ services:
     api:
         build: ./api
         volumes:
+            - ./api/start.sh:/usr/local/bin/start.sh
             - ./api/gateway:/var/www/html
-        entrypoint: php /var/www/html/bin/console server:run api:8000
+        entrypoint: start.sh api 8000
     ms1:
         build: ./ms1
         restart: always
         volumes:
+            - ./ms1/start.sh:/usr/local/bin/start.sh
             - ./ms1/resolvers:/var/www/html
-        entrypoint: php /var/www/html/bin/console server:run ms1:8001
+        entrypoint: start.sh ms1 8001
     ms1_db:
         image: sameersbn/postgresql:9.6-2
         restart: always
