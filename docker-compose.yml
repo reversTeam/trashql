@@ -20,6 +20,8 @@ services:
             - ./ms1/start.sh:/usr/local/bin/start.sh
             - ./ms1/resolvers:/var/www/html
         entrypoint: start.sh ms1 8001
+        ports:
+            - 8001:8001
     ms1_db:
         image: sameersbn/postgresql:9.6-2
         restart: always
