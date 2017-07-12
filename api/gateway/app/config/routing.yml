@@ -1,3 +1,6 @@
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
+
+graph_ql:
+    resource: "@GraphQLBundle/Controller/"
