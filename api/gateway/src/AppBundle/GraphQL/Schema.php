@@ -5,6 +5,7 @@
 
 namespace AppBundle\GraphQL;
 
+use AppBundle\GraphQL\Schemas\OfferType;
 use AppBundle\GraphQL\Schemas\ProductType;
 use Youshido\GraphQL\Config\Schema\SchemaConfig;
 use Youshido\GraphQL\Field\InputField;
@@ -16,6 +17,7 @@ use Youshido\GraphQL\Relay\RelayMutation;
 use Youshido\GraphQL\Schema\AbstractSchema;
 use Youshido\GraphQL\Type\ListType\ListType;
 use Youshido\GraphQL\Type\NonNullType;
+use Youshido\GraphQL\Type\Scalar\IntType;
 use Youshido\GraphQL\Type\Scalar\StringType;
 use AppBundle\GraphQL\Schemas\FactionType;
 use AppBundle\GraphQL\Schemas\ShipType;
@@ -66,13 +68,32 @@ class Schema extends AbstractSchema
                     return TestDataProvider::getByNames($args['names']);
                 }
             ])
-            ->addField('products', [
+            ->addField('product', [
                 'type'    => new ProductType(),
                 'args'    => [
                     'id' => [
-                        'type' => new ListType(new StringType())
+                        'type' => new IntType()
                     ]
                 ],
+                'resolve' => function ($value = null, $args, $info) {
+                    $product = new ProductType();
+                    return $product->getProduct($value, $args, $info);
+                }
+            ])
+            ->addField('offer', [
+                'type'    => new OfferType(),
+                'args'    => [
+                    'id' => [
+                        'type' => new IntType()
+                    ]
+                ],
+                'resolve' => function ($value = null, $args, $info) {
+                    $product = new OfferType();
+                    return $product->getOffer($value, $args, $info);
+                }
+            ])
+            ->addField('products', [
+                'type'    => new ProductType(),
                 'resolve' => function () {
                     $product = new ProductType();
                     return $product->getProduct();

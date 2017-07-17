@@ -25,8 +25,20 @@ class OfferType extends AbstractObjectType
     {
         $config
             ->addField(new GlobalIdField(self::TYPE_KEY))
-            ->addField('name', ['type' => TypeMap::TYPE_STRING, 'description' => 'The name of offer.'])
-            ->addField('description', ['type' => TypeMap::TYPE_STRING, 'description' => 'The description of offer.']);
+            ->addField('name', [
+                'type' => TypeMap::TYPE_STRING,
+                'description' => 'The name of offer.',
+                'resolve'     => function ($value = null, $args = [], $type = null) {
+                    return $value['label'];
+                }
+            ])
+            ->addField('status', [
+                'type' => TypeMap::TYPE_STRING,
+                'description' => 'The status of product.',
+                'resolve' => function ($value = null, $args = [], $type = null) {
+                    return $value['status'];
+                }
+            ]);
     }
 
     public function getOne($id)
@@ -42,6 +54,13 @@ class OfferType extends AbstractObjectType
     public function getInterfaces()
     {
         return [new NodeInterfaceType()];
+    }
+
+    public function getOffer($value = null, $args, $info)
+    {
+        dump($value, $args, $info);
+        $product = json_decode(file_get_contents("http://172.20.0.1:8000/offer/".$args['id']), true);
+        return $product;
     }
 
 }

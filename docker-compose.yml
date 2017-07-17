@@ -12,21 +12,23 @@ services:
         volumes:
             - ./api/start.sh:/usr/local/bin/start.sh
             - ./api/gateway:/var/www/html
-        entrypoint: start.sh api 8000
-    ms1:
-        build: ./ms1
-        restart: always
-        volumes:
-            - ./ms1/start.sh:/usr/local/bin/start.sh
-            - ./ms1/resolvers:/var/www/html
-        entrypoint: start.sh ms1 8001
+        entrypoint: start.sh api 9000
         ports:
-            - 8001:8001
+            - 9000:9000
+#    ms1:
+#        build: ./ms1
+#        restart: always
+#        volumes:
+#            - ./ms1/start.sh:/usr/local/bin/start.sh
+#            - ./ms1/resolvers:/var/www/html
+#        entrypoint: start.sh ms1 8001
+#        ports:
+#            - 8001:8001
     ms1_db:
         image: sameersbn/postgresql:9.6-2
         restart: always
         ports:
-            - "5432:5432"
+            - "5533:5533"
         environment:
             - DEBUG=false
             - DB_USER=online
@@ -34,16 +36,16 @@ services:
             - DB_NAME=ms1
         volumes:
             - ./ms1/database:/var/lib/postgresql
-    ms2:
-        image: golang:1.8
-        volumes:
-            - "./ms2:/ms2"
-        command: /ms2/start.sh
-    ms3:
-        image: golang:1.8
-        volumes:
-            - "./ms3:/ms3"
-        command: /ms3/start.sh
+#    ms2:
+#        image: golang:1.8
+#        volumes:
+#            - "./ms2:/ms2"
+#        command: /ms2/start.sh
+#    ms3:
+#        image: golang:1.8
+#        volumes:
+#            - "./ms3:/ms3"
+#        command: /ms3/start.sh
 
 
 

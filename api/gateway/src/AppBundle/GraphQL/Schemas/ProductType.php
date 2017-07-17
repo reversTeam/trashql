@@ -14,8 +14,10 @@ use Youshido\GraphQL\Relay\NodeInterfaceType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\TypeMap;
 use AppBundle\GraphQL\Schemas\OfferType;
-use Youshido\GraphQl\Relay\Connection\ArrayConnection;
+
+use Youshido\GraphQL\Relay\Connection\ArrayConnection;
 use Youshido\GraphQL\Relay\Connection\Connection;
+
 
 class ProductType extends AbstractObjectType
 {
@@ -29,30 +31,18 @@ class ProductType extends AbstractObjectType
                 'type' => TypeMap::TYPE_STRING,
                 'description' => 'The name of product.',
                 'resolve'     => function ($value = null, $args = [], $type = null) {
-                    dump($value, $args, $type);
-                    $product = json_decode(file_get_contents("http://riviere.io:8001/offers"), true);
-                    return $product["name"];
+                    return $value['label'];
                 }
             ])
             ->addField('description', ['type' => TypeMap::TYPE_STRING, 'description' => 'The description of product.'])
             ->addField('offers', [
                 'type'        => Connection::connectionDefinition(new OfferType()),
-                'description' => 'Offers by product',
+                'description' => 'The offer used by the product',
                 'args'        => Connection::connectionArgs(),
                 'resolve'     => function ($value = null, $args = [], $type = null) {
-                    return ArrayConnection::connectionFromArray(array_map(function ($id) {
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, "http://riviere.io:8001/offers");
-                        curl_setopt($ch, CURLOPT_HEADER, TRUE);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                        $test = curl_exec($ch);
-                        curl_close($ch);
-                        dump($test);
-                        return $test;
-                    }, $value['ships']), $args);
+                    return ArrayConnection::connectionFromArray($value['offers']);
                 }
-            ]);;
+            ]);
     }
 
     public function getOne($id)
@@ -70,11 +60,10 @@ class ProductType extends AbstractObjectType
         return [new NodeInterfaceType()];
     }
 
-    public function getProduct()
+    public function getProduct($value = null, $args, $info)
     {
-        return [
-            ''
-        ];
+        $product = json_decode(file_get_contents("http://172.20.0.1:8000/product/".$args['id']), true);
+        return $product;
     }
 
 }
